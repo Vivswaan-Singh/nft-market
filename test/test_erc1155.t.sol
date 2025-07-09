@@ -104,12 +104,12 @@ contract Market is Test {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr6);
         token.mintTokens(tokenId);
-        //vm.prank(addr6);
-        //sale.listNft1155(address(token),address(0),tokenId,100);
-        //vm.deal(addr1,500);
-        //vm.expectRevert(Sale.EtherNotSent.selector);
-        //vm.prank(addr1);
-        //sale.purchaseNft1155{value:150}(address(token), tokenId);
+        vm.prank(addr6);
+        sale.listNft1155(address(token),address(0),tokenId,100);
+        vm.deal(addr1,500);
+        vm.expectRevert(Sale.EtherNotSent.selector);
+        vm.prank(addr1);
+        sale.purchaseNft1155{value:150}(address(token), tokenId);
     }
 }
 
