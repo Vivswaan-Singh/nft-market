@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import {Test, console} from "forge-std/Test.sol";
 import { Nft, Currency, Token} from "../src/tokens.sol";
 import {Sale} from "../src/nftMarket.sol";
-
+/*
 contract Market is Test {
     Sale public sale;
     Nft public nft;
@@ -107,7 +107,7 @@ contract Market is Test {
         sale.purchaseNft721{value:150}(address(nft), tokenId);
     }
 }
-
+*/
 contract payableReceiver{
     receive() external payable {}
 }

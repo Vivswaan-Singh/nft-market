@@ -20,18 +20,16 @@ contract Nft is ERC721{
 
 }
 
-// nft owner 0xdD870fA1b7C4700F2BD7f44238821C26f7392148
-// buyer 0x583031D1113aD414F02576BD6afaBfb302140225
 
 contract Token is ERC1155{
     constructor() ERC1155("") {}
     
-    function mintAssets(uint256 tokenID,uint256 amount) public {
-        _mint(msg.sender, tokenID,amount,"");
+    function mintTokens(uint256 tokenID) public {
+        _mint(msg.sender, tokenID,1,"");
     }
 
     function transferTokenFrom(address from, address to, uint256 tokenID) public {
-        //_transfer(from, to, tokenID);
+        _safeTransferFrom(from, to, tokenID, 1, "");
     }
 
 }
@@ -43,7 +41,7 @@ contract Currency is ERC20, Ownable{
         _mint(msg.sender, amount);
     }
 
-    function transferFrom(address from, address to, uint256 amount) override public returns(bool) {
+    function transferCurrencyFrom(address from, address to, uint256 amount) public returns(bool) {
         require(amount<=balanceOf(from));
         _transfer(from, to, amount);
         return true;
