@@ -4,6 +4,7 @@ pragma solidity ^0.8.13;
 import {Test, console} from "forge-std/Test.sol";
 import { Token, Currency, Token} from "../src/tokens.sol";
 import {Sale} from "../src/nftMarket.sol";
+import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
 contract Market is Test {
     Sale public sale;
@@ -113,11 +114,13 @@ contract Market is Test {
     }
 }
 
-contract payableReceiver{
+contract payableReceiver is ERC1155Holder  {
     receive() external payable {}
+
+    
 }
 
-contract unpayableReceiver{
+contract unpayableReceiver is ERC1155Holder  {
     receive() external payable {
         revert("");
     }
