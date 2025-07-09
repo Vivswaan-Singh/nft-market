@@ -7,7 +7,6 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 contract Sale is Ownable {
     
     address saleOwner;
-    bool private initialized;
     mapping(uint256=>mapping(address=>MarketItem)) public idToMarketItem;
     mapping(uint256=>mapping(address=>bool)) public saleExists;
     mapping(address => uint256) private sellerEarnings;
@@ -29,8 +28,6 @@ contract Sale is Ownable {
     error ErrorListing1155();
 
     constructor() Ownable(msg.sender) {
-        require(!initialized, "Contract instance has already been initialized");
-        initialized=true;
         saleOwner=msg.sender;
     }
  

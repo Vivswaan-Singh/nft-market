@@ -17,8 +17,6 @@ contract Market is Test {
     address addr5;
     address addr6;
 
-
-
     function setUp() public {
         sale = new Sale();
         token = new Token();
