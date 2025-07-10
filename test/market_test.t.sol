@@ -16,7 +16,9 @@ contract Market is Test {
     address addr4;
     address addr5;
     address addr6;
+    address saleAddr;
 
+    event Seller(address addr);
 
 
     function setUp() public {
@@ -32,6 +34,7 @@ contract Market is Test {
         addr5 = address(seller);
         unpayableReceiver seller2 = new unpayableReceiver();
         addr6 = address(seller2);
+        saleAddr = sale.getSaleAddress();
     }
 
     function test_listNft721(uint256 tokenId) public {
@@ -60,8 +63,12 @@ contract Market is Test {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr1);
         currency.mintCoins(10000);
+        vm.prank(addr1);
+        currency.approve(saleAddr, 10000);
         vm.prank(addr2);
         nft.mintAssets(tokenId);
+        vm.prank(addr2);
+        nft.approve(saleAddr, tokenId);
         vm.prank(addr2);
         sale.listNft721(address(nft),address(currency),tokenId,100);
         vm.prank(addr1);
@@ -74,6 +81,8 @@ contract Market is Test {
         vm.prank(addr2);
         nft.mintAssets(tokenId);
         vm.prank(addr2);
+        nft.approve(saleAddr, tokenId);
+        vm.prank(addr2);
         sale.listNft721(address(nft),address(0),tokenId,100);
         vm.deal(addr5,200);
         vm.prank(addr5);
@@ -85,6 +94,8 @@ contract Market is Test {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr2);
         nft.mintAssets(tokenId);
+        vm.prank(addr2);
+        nft.approve(saleAddr, tokenId);
         vm.prank(addr2);
         sale.listNft721(address(nft),address(0),tokenId,100);
         vm.deal(addr5,50);
@@ -99,6 +110,8 @@ contract Market is Test {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr6);
         nft.mintAssets(tokenId);
+        vm.prank(addr6);
+        nft.approve(saleAddr, tokenId);
         vm.prank(addr6);
         sale.listNft721(address(nft),address(0),tokenId,100);
         vm.deal(addr1,500);

@@ -16,6 +16,7 @@ contract Market is Test {
     address addr4;
     address addr5;
     address addr6;
+    address saleAddr;
 
     function setUp() public {
         sale = new Sale();
@@ -30,6 +31,7 @@ contract Market is Test {
         addr5 = address(seller);
         unpayableReceiver seller2 = new unpayableReceiver();
         addr6 = address(seller2);
+        saleAddr = sale.getSaleAddress();
     }
 
     function test_listNft1155(uint256 tokenId) public {
@@ -56,8 +58,12 @@ contract Market is Test {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr1);
         currency.mintCoins(10000);
+        vm.prank(addr1);
+        currency.approve(saleAddr, 10000);
         vm.prank(addr2);
         token.mintTokens(tokenId);
+        vm.prank(addr2);
+        token.setApprovalForAll(saleAddr, true);
         vm.prank(addr2);
         sale.listNft1155(address(token),address(currency),tokenId,100);
         uint256 bal1=currency.balanceOf(addr1);
@@ -73,6 +79,8 @@ contract Market is Test {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr2);
         token.mintTokens(tokenId);
+        vm.prank(addr2);
+        token.setApprovalForAll(saleAddr, true);
         vm.prank(addr2);
         sale.listNft1155(address(token),address(0),tokenId,100);
         vm.deal(addr5,200);
@@ -90,6 +98,8 @@ contract Market is Test {
         vm.prank(addr2);
         token.mintTokens(tokenId);
         vm.prank(addr2);
+        token.setApprovalForAll(saleAddr, true);
+        vm.prank(addr2);
         sale.listNft1155(address(token),address(0),tokenId,100);
         vm.deal(addr5,50);
         vm.expectRevert(
@@ -103,6 +113,8 @@ contract Market is Test {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr6);
         token.mintTokens(tokenId);
+        vm.prank(addr2);
+        token.setApprovalForAll(saleAddr, true);
         vm.prank(addr6);
         sale.listNft1155(address(token),address(0),tokenId,100);
         vm.deal(addr1,500);

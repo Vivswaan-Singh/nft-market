@@ -28,9 +28,6 @@ contract Token is ERC1155{
         _mint(msg.sender, tokenID,1,"");
     }
 
-    function transferTokenFrom(address from, address to, uint256 tokenID) public {
-        _safeTransferFrom(from, to, tokenID, 1, "");
-    }
 
 }
 
@@ -39,11 +36,5 @@ contract Currency is ERC20, Ownable{
 
     function mintCoins(uint256 amount) public  {
         _mint(msg.sender, amount);
-    }
-
-    function transferCurrencyFrom(address from, address to, uint256 amount) public returns(bool) {
-        require(amount<=balanceOf(from));
-        _transfer(from, to, amount);
-        return true;
     }
 }

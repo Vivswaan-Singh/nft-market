@@ -3,6 +3,9 @@ pragma solidity ^0.8.0;
 
 import { Nft, Currency, Token} from "../src/tokens.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
 contract Sale is Ownable {
     
@@ -58,11 +61,11 @@ contract Sale is Ownable {
             sellerEarnings[saleOwner]+=fees;
         }
         else{
-            Currency(listedItem.paymentAddress).transferCurrencyFrom(msg.sender,listedItem.sellerAdderess,sellerAmount);
-            Currency(listedItem.paymentAddress).transferCurrencyFrom(msg.sender,saleOwner,fees);
+            ERC20(listedItem.paymentAddress).transferFrom(msg.sender,listedItem.sellerAdderess,sellerAmount);
+            ERC20(listedItem.paymentAddress).transferFrom(msg.sender,saleOwner,fees);
             sellerEarnings[saleOwner]+=fees;
         }
-        Nft(nftAddress).transferAssetFrom(listedItem.sellerAdderess, msg.sender, tokenId);
+        ERC721(nftAddress).transferFrom(listedItem.sellerAdderess, msg.sender, tokenId);
     }
 
     function purchaseNft1155(address nftAddress, uint256 tokenId) public payable {
@@ -79,15 +82,19 @@ contract Sale is Ownable {
             sellerEarnings[saleOwner]+=fees;
         }
         else{
-            Currency(listedItem.paymentAddress).transferCurrencyFrom(msg.sender,listedItem.sellerAdderess,sellerAmount);
-            Currency(listedItem.paymentAddress).transferCurrencyFrom(msg.sender,saleOwner,fees);
+            ERC20(listedItem.paymentAddress).transferFrom(msg.sender,listedItem.sellerAdderess,sellerAmount);
+            ERC20(listedItem.paymentAddress).transferFrom(msg.sender,saleOwner,fees);
             sellerEarnings[saleOwner]+=fees;
         }
-        Token(nftAddress).transferTokenFrom(listedItem.sellerAdderess, msg.sender, tokenId);
+        ERC1155(nftAddress).safeTransferFrom(listedItem.sellerAdderess, msg.sender, tokenId, 1, "");
     }
 
     function getSeller(address nftAddress, uint256 tokenId) public view returns(address) {
         return idToMarketItem[tokenId][nftAddress].sellerAdderess;
+    }
+
+    function getSaleAddress() external view returns(address){
+        return address(this);
     }
 
 }
