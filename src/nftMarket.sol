@@ -58,6 +58,8 @@ contract Sale is Ownable {
             require(msg.value>=listedItem.price, LessEther(msg.value,listedItem.price));
             (bool sent, ) = listedItem.sellerAdderess.call{value: sellerAmount}("");
             require(sent, EtherNotSent());
+            (bool sentback, ) = msg.sender.call{value: msg.value-listedItem.price}("");
+            require(sentback, EtherNotSent());
             sellerEarnings[saleOwner]+=fees;
         }
         else{
@@ -79,6 +81,8 @@ contract Sale is Ownable {
             require(msg.value>=listedItem.price, LessEther(msg.value,listedItem.price));
             (bool sent, ) = listedItem.sellerAdderess.call{value: sellerAmount}("");
             require(sent, EtherNotSent());
+            (bool sentback, ) = msg.sender.call{value: msg.value-listedItem.price}("");
+            require(sentback, EtherNotSent());
             sellerEarnings[saleOwner]+=fees;
         }
         else{
