@@ -10,8 +10,8 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 contract Sale is Ownable {
     
     address saleOwner;
-    mapping(uint256=>mapping(address=>MarketItem)) public idToMarketItem;
-    mapping(uint256=>mapping(address=>bool)) public saleExists;
+    mapping(uint256 => mapping(address => MarketItem)) private idToMarketItem;
+    mapping(uint256 => mapping(address => bool)) private saleExists;
     mapping(address => uint256) private sellerEarnings;
  
     struct MarketItem { 
@@ -37,12 +37,12 @@ contract Sale is Ownable {
         saleOwner=msg.sender;
     }
  
-    function listNft721(address _nftContractAddress,address _ERC20address,uint256 _tokenID, uint256 _price) public {
+    function listNft721(address _nftContractAddress, address _ERC20address, uint256 _tokenID, uint256 _price) public {
         require(ERC721(_nftContractAddress).ownerOf(_tokenID)==msg.sender, NotOwner(msg.sender,Nft(_nftContractAddress).ownerOf(_tokenID)));
         _enlist(msg.sender, _nftContractAddress, _ERC20address, _tokenID, _price, 1, true);
     }
 
-    function listNft1155(address _nftContractAddress,address _ERC20address,uint256 _tokenID, uint256 _price, uint256 _amount) public {
+    function listNft1155(address _nftContractAddress, address _ERC20address, uint256 _tokenID, uint256 _price, uint256 _amount) public {
         require(ERC1155(_nftContractAddress).balanceOf(msg.sender, _tokenID)!=0, ErrorListing1155());
         _enlist(msg.sender, _nftContractAddress, _ERC20address, _tokenID, _price, _amount, false);
     }

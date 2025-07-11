@@ -10,14 +10,9 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 contract Nft is ERC721{
     constructor() ERC721("NFT","nft") {}
     
-    function mintAssets(uint256 tokenID) public {
+    function mint(uint256 tokenID) public {
         _mint(msg.sender, tokenID);
     }
-
-    function transferAssetFrom(address from, address to, uint256 tokenID) public {
-        _transfer(from, to, tokenID);
-    }
-
 }
 
 
@@ -27,14 +22,12 @@ contract Token is ERC1155{
     function mint(uint256 tokenID,uint256 amount) public {
         _mint(msg.sender, tokenID,amount,"");
     }
-
-
 }
 
 contract Currency is ERC20, Ownable{
     constructor() ERC20("Currency","CRR") Ownable(msg.sender) {}
 
-    function mintCoins(uint256 amount) public  {
+    function mint(uint256 amount) public  {
         _mint(msg.sender, amount);
     }
 }
