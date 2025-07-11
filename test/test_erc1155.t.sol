@@ -37,9 +37,9 @@ contract Market is Test {
     function test_listNft1155(uint256 tokenId) public {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr2);
-        token.mintTokens(tokenId);
+        token.mint(tokenId,25);
         vm.prank(addr2);
-        sale.listNft1155(address(token),address(currency),tokenId,100);
+        sale.listNft1155(address(token),address(currency),tokenId,20,5);
         assertEq(sale.getSeller(address(token), tokenId),addr2);
     }
 
@@ -47,10 +47,10 @@ contract Market is Test {
     function test_failed_listNft1155(uint256 tokenId) public {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr3);
-        token.mintTokens(tokenId);
+        token.mint(tokenId,25);
         vm.expectRevert(Sale.ErrorListing1155.selector);
         vm.prank(addr4);
-        sale.listNft1155(address(token),address(currency),tokenId,100);
+        sale.listNft1155(address(token),address(currency),tokenId,20,5);
         
     }
 
@@ -59,17 +59,17 @@ contract Market is Test {
         vm.prank(addr1);
         currency.mintCoins(10000);
         vm.prank(addr1);
-        currency.approve(saleAddr, 10000);
+        currency.approve(saleAddr, 1000);
         vm.prank(addr2);
-        token.mintTokens(tokenId);
+        token.mint(tokenId,25);
         vm.prank(addr2);
         token.setApprovalForAll(saleAddr, true);
         vm.prank(addr2);
-        sale.listNft1155(address(token),address(currency),tokenId,100);
+        sale.listNft1155(address(token),address(currency),tokenId,20,5);
         uint256 bal1=currency.balanceOf(addr1);
         uint256 bal2=currency.balanceOf(addr2);
         vm.prank(addr1);
-        sale.purchaseNft1155(address(token), tokenId);
+        sale.purchaseNft1155(address(token), tokenId, 5);
         uint256 new_bal1=currency.balanceOf(addr1);
         uint256 new_bal2=currency.balanceOf(addr2);
         assertEq(bal1+bal2,new_bal1+new_bal2);
@@ -78,16 +78,16 @@ contract Market is Test {
     function test_ether_purchaseNft1155(uint256 tokenId) public {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr2);
-        token.mintTokens(tokenId);
+        token.mint(tokenId,25);
         vm.prank(addr2);
         token.setApprovalForAll(saleAddr, true);
         vm.prank(addr2);
-        sale.listNft1155(address(token),address(0),tokenId,100);
+        sale.listNft1155(address(token),address(0),tokenId,20,5);
         vm.deal(addr5,200);
         uint256 bal2=address(addr2).balance;
         uint256 bal5=address(addr5).balance;
         vm.prank(addr5);
-        sale.purchaseNft1155{value:100}(address(token), tokenId);
+        sale.purchaseNft1155{value:100}(address(token), tokenId, 3);
         uint256 new_bal2=address(addr2).balance;
         uint256 new_bal5=address(addr5).balance;
         assertEq(bal5+bal2,new_bal5+new_bal2);
@@ -96,31 +96,31 @@ contract Market is Test {
     function test_less_ether_purchaseNft1155(uint256 tokenId) public {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr2);
-        token.mintTokens(tokenId);
+        token.mint(tokenId,25);
         vm.prank(addr2);
         token.setApprovalForAll(saleAddr, true);
         vm.prank(addr2);
-        sale.listNft1155(address(token),address(0),tokenId,100);
+        sale.listNft1155(address(token),address(0),tokenId,20,5);
         vm.deal(addr5,50);
         vm.expectRevert(
-            abi.encodeWithSelector(Sale.LessEther.selector, 50, 100)
+            abi.encodeWithSelector(Sale.LessEther.selector, 10, 60)
         );
         vm.prank(addr5);
-        sale.purchaseNft1155{value:50}(address(token), tokenId);
+        sale.purchaseNft1155{value:10}(address(token), tokenId, 3);
     }
 
     function test_failed_ether_purchaseNft1155(uint256 tokenId) public {
         vm.assume(tokenId>0 && tokenId<512);
         vm.prank(addr6);
-        token.mintTokens(tokenId);
+        token.mint(tokenId,25);
         vm.prank(addr2);
         token.setApprovalForAll(saleAddr, true);
         vm.prank(addr6);
-        sale.listNft1155(address(token),address(0),tokenId,100);
+        sale.listNft1155(address(token),address(0),tokenId,20,5);
         vm.deal(addr1,500);
         vm.expectRevert(Sale.EtherNotSent.selector);
         vm.prank(addr1);
-        sale.purchaseNft1155{value:150}(address(token), tokenId);
+        sale.purchaseNft1155{value:150}(address(token), tokenId, 3);
     }
 }
 

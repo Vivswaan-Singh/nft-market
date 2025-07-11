@@ -23,9 +23,9 @@ contract Nft is ERC721{
 
 contract Token is ERC1155{
     constructor() ERC1155("") {}
-    
-    function mintTokens(uint256 tokenID) public {
-        _mint(msg.sender, tokenID,1,"");
+
+    function mint(uint256 tokenID,uint256 amount) public {
+        _mint(msg.sender, tokenID,amount,"");
     }
 
 

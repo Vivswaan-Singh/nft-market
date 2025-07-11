@@ -100,10 +100,10 @@ contract Market is Test {
         sale.listNft721(address(nft),address(0),tokenId,100);
         vm.deal(addr5,50);
         vm.expectRevert(
-            abi.encodeWithSelector(Sale.LessEther.selector, 50, 100)
+            abi.encodeWithSelector(Sale.LessEther.selector, 10, 100)
         );
         vm.prank(addr5);
-        sale.purchaseNft721{value:50}(address(nft), tokenId);
+        sale.purchaseNft721{value:10}(address(nft), tokenId);
     }
 
     function test_failed_ether_purchaseNft721(uint256 tokenId) public {
